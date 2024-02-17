@@ -10,7 +10,7 @@ import logging
 
 app = Flask(__name__)
 log = logging.getLogger('werkzeug')
-# log.disabled = True
+log.disabled = True
 CORS(app)
 
 initialState = None
@@ -48,7 +48,6 @@ def analyze():
         thresh_frame = cv2.dilate(thresh_frame, None, iterations=2)
         cont, _ = cv2.findContours(thresh_frame.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for cur in cont:
-            print(cv2.contourArea(cur))
             if cv2.contourArea(cur) < 4000:
                 continue
 
@@ -60,7 +59,6 @@ def analyze():
         cv2.imshow("Diff Frame", differ_frame)
         cv2.imshow("Threshold Frame", thresh_frame)
         cv2.imshow("Color Frame", cur_frame)
-        wait_key = cv2.waitKey(1)
 
         if var_motion != prev_var_motion:
             print(f"Change in motion status! Prev: {prev_var_motion} | Current: {var_motion} | Pass #: {pass_idx}")

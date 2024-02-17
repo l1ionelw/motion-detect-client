@@ -16,14 +16,17 @@ var_motion = None
 stop_program = False
 ml_active = False
 
+prev_var_motion = None
+
 
 def analyze():
-    global initialState, pass_idx, var_motion, stop_program, initialState, dataFrame, ml_active
+    global initialState, pass_idx, var_motion, stop_program, initialState, dataFrame, ml_active, prev_var_motion
     ml_active = True
     initialState = None
     dataFrame = panda.DataFrame(columns=["Initial", "Final"])
     video = cv2.VideoCapture(0)
     pass_idx = 0
+    prev_var_motion = -1
     var_motion = -1
     while True:
         check, cur_frame = video.read()
@@ -54,9 +57,10 @@ def analyze():
         cv2.imshow("Color Frame", cur_frame)
         wait_key = cv2.waitKey(1)
 
-        print(f"Motion Var: {var_motion} | Pass: {pass_idx}")
+        if var_motion != prev_var_motion:
+            print(f"Change in motion status! Prev: {prev_var_motion} | Current: {var_motion} | Pass #: {pass_idx}")
+            prev_var_motion = var_motion
         pass_idx += 1
-        time.sleep(0.5)
 
         if stop_program:
             print("Stopping motion detection thread")
@@ -65,6 +69,8 @@ def analyze():
             print("Windows Stopped")
             ml_active = False
             exit(0)
+
+        time.sleep(0.5)
 
     # dataFrame.to_csv("EachMovement.csv")
 

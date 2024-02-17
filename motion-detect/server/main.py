@@ -5,8 +5,13 @@ import pandas as panda
 import cv2
 import time
 from flask import Flask
+from flask_cors import CORS
+import logging
 
 app = Flask(__name__)
+log = logging.getLogger('werkzeug')
+log.disabled = True
+CORS(app)
 
 initialState = None
 pass_idx = None
@@ -68,6 +73,8 @@ def analyze():
             cv2.destroyAllWindows()
             print("Windows Stopped")
             ml_active = False
+            var_motion = None
+            prev_var_motion = None
             exit(0)
 
         time.sleep(0.5)

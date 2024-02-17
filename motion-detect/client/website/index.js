@@ -2,6 +2,11 @@ API_URL = "http://98.42.152.32:2500/"
 var statbox = document.getElementById("status-box")
 
 console.log("Script loaded")
+
+Notification.requestPermission((result) => {
+    console.log(result);
+});
+
 setInterval(() => {
     getStatus()
 }, 1000);
@@ -20,12 +25,17 @@ function changeBox(json) {
         statbox.classList.remove("red")
         statbox.classList.remove("blue")
         statbox.classList.add("green")
-
     }
     if (json.motion > 0) {
         // someone detected
         statbox.classList.remove("green")
         statbox.classList.remove("blue")
         statbox.classList.add("red")
+        newNotification("Motion Detected")
+    }
+    function newNotification(content) {
+        console.log("sending notif")
+        const notification = new Notification("Motion Detect", { body: content});
+        new Notification("helo")
     }
 }

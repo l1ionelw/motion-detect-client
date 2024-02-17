@@ -10,7 +10,7 @@ import logging
 
 app = Flask(__name__)
 log = logging.getLogger('werkzeug')
-log.disabled = True
+# log.disabled = True
 CORS(app)
 
 initialState = None
@@ -107,6 +107,6 @@ def start_analyze():
 
 
 if __name__ == '__main__':
-    ml = threading.Thread(target=analyze)
-    ml.start()
+    # ml = threading.Thread(target=analyze)
+    # ml.start()
     app.run(host="98.42.152.32", port=2500)

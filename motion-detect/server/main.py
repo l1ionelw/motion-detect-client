@@ -47,9 +47,9 @@ def analyze():
         thresh_frame = cv2.threshold(differ_frame, 30, 255, cv2.THRESH_BINARY)[1]
         thresh_frame = cv2.dilate(thresh_frame, None, iterations=2)
         cont, _ = cv2.findContours(thresh_frame.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
         for cur in cont:
-            if cv2.contourArea(cur) < 10000:
+            if cv2.contourArea(cur) < 4000:
+                print(cv2.contourArea(cur))
                 continue
 
             var_motion = 1
@@ -77,7 +77,7 @@ def analyze():
             prev_var_motion = None
             exit(0)
 
-        time.sleep(0.5)
+        time.sleep(0.2)
 
     # dataFrame.to_csv("EachMovement.csv")
 

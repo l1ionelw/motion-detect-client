@@ -48,8 +48,8 @@ def analyze():
         thresh_frame = cv2.dilate(thresh_frame, None, iterations=2)
         cont, _ = cv2.findContours(thresh_frame.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for cur in cont:
+            print(cv2.contourArea(cur))
             if cv2.contourArea(cur) < 4000:
-                print(cv2.contourArea(cur))
                 continue
 
             var_motion = 1

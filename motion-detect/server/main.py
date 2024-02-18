@@ -15,22 +15,21 @@ CORS(app)
 
 initialState = None
 pass_idx = None
-dataFrame = None
 var_motion = None
 
 stop_program = False
 ml_active = False
 
 prev_var_motion = None
-SENSITIVITY = 5000
+SENSITIVITY = 4000
+renewInitialState = False
 
 
 def analyze():
-    global initialState, pass_idx, var_motion, stop_program, initialState, dataFrame, ml_active, prev_var_motion, SENSITIVITY
+    global initialState, pass_idx, var_motion, stop_program, initialState, ml_active, prev_var_motion, SENSITIVITY, renewInitialState
     print("Starting detection")
     ml_active = True
     initialState = None
-    dataFrame = panda.DataFrame(columns=["Initial", "Final"])
     video = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     pass_idx = 0
     prev_var_motion = -1
@@ -41,8 +40,9 @@ def analyze():
         gray_image = cv2.cvtColor(cur_frame, cv2.COLOR_BGR2GRAY)
         gray_frame = cv2.GaussianBlur(gray_image, (21, 21), 0)
 
-        if initialState is None:
+        if (initialState is None) or renewInitialState:
             initialState = gray_frame
+            renewInitialState = False
             continue
 
         differ_frame = cv2.absdiff(initialState, gray_frame)
@@ -108,6 +108,11 @@ def start_analyze():
     threading.Thread(target=analyze).start()
     return flask.jsonify({"stop_program": stop_program, "status": "starting"})
 
+@app.route("/renew")
+def renewState():
+    global renewInitialState
+    renewInitialState = True
+    return flask.jsonify({"status": "renew state"})
 
 if __name__ == '__main__':
     print("Starting Detection")

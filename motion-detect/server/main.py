@@ -30,7 +30,7 @@ def analyze():
     ml_active = True
     initialState = None
     dataFrame = panda.DataFrame(columns=["Initial", "Final"])
-    video = cv2.VideoCapture(0)
+    video = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     pass_idx = 0
     prev_var_motion = -1
     var_motion = -1
@@ -89,6 +89,7 @@ def index():
 
 @app.route("/stop")
 def stop():
+    print("Stopping")
     global stop_program, var_motion
     stop_program = True
     var_motion = None
@@ -97,6 +98,7 @@ def stop():
 
 @app.route("/start")
 def start_analyze():
+    print("Starting")
     global stop_program
     stop_program = False
     if ml_active:

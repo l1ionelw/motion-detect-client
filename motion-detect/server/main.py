@@ -26,6 +26,7 @@ prev_var_motion = None
 
 def analyze():
     global initialState, pass_idx, var_motion, stop_program, initialState, dataFrame, ml_active, prev_var_motion
+    print("Starting detection")
     ml_active = True
     initialState = None
     dataFrame = panda.DataFrame(columns=["Initial", "Final"])
@@ -102,11 +103,10 @@ def start_analyze():
         print("already starting up")
         return flask.jsonify({"status": "waiting"})
     threading.Thread(target=analyze).start()
-    print("starting")
     return flask.jsonify({"stop_program": stop_program, "status": "starting"})
 
 
 if __name__ == '__main__':
-    # ml = threading.Thread(target=analyze)
-    # ml.start()
+    print("Starting Detection")
+    threading.Thread(target=analyze).start()
     app.run(host="98.42.152.32", port=2500)

@@ -59,6 +59,7 @@ def analyze():
         cv2.imshow("Diff Frame", differ_frame)
         cv2.imshow("Threshold Frame", thresh_frame)
         cv2.imshow("Color Frame", cur_frame)
+        wait_key = cv2.waitKey(1)
 
         if var_motion != prev_var_motion:
             print(f"Change in motion status! Prev: {prev_var_motion} | Current: {var_motion} | Pass #: {pass_idx}")
@@ -101,6 +102,7 @@ def start_analyze():
         print("already starting up")
         return flask.jsonify({"status": "waiting"})
     threading.Thread(target=analyze).start()
+    print("starting")
     return flask.jsonify({"stop_program": stop_program, "status": "starting"})
 
 

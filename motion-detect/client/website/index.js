@@ -1,5 +1,7 @@
 API_URL = "http://98.42.152.32:2500"
 var statbox = document.getElementById("status-box")
+var image = document.getElementById("status-image")
+image.style = `height: ${window.screen.width / 30}px;`
 
 console.log("Script loaded")
 
@@ -9,7 +11,6 @@ Notification.requestPermission((result) => {
     console.log(result);
 });
 */
-
 
 setInterval(() => {
     getStatus()
@@ -38,14 +39,16 @@ function changeBox(json) {
         statbox.classList.remove("green")
         statbox.classList.remove("blue")
         statbox.classList.add("red")
-        newNotification("Motion Detected")
+        setImage()
     }
+}
 
-    function newNotification(content) {
-        console.log("sending notif")
-        const notification = new Notification("Motion Detect", {body: content});
-        new Notification("helo")
-    }
+
+function setImage() {
+    fetch(`${API_URL}/image`).then((response) => response.text()).then((text) => {
+        console.log(text)
+        image.src = `data:image/jpeg;base64, ${text}`
+    })
 }
 
 window.addEventListener("keydown", (event) => {

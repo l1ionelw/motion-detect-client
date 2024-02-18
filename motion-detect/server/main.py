@@ -7,6 +7,7 @@ import time
 from flask import Flask
 from flask_cors import CORS
 import logging
+import base64
 
 app = Flask(__name__)
 log = logging.getLogger('werkzeug')
@@ -23,10 +24,11 @@ ml_active = False
 prev_var_motion = None
 SENSITIVITY = 4000
 renewInitialState = False
+cur_frame_bytes = None
 
 
 def analyze():
-    global initialState, pass_idx, var_motion, stop_program, initialState, ml_active, prev_var_motion, SENSITIVITY, renewInitialState
+    global initialState, pass_idx, var_motion, stop_program, initialState, ml_active, prev_var_motion, SENSITIVITY, renewInitialState, cur_frame_bytes
     print("Starting detection")
     ml_active = True
     initialState = None
@@ -62,6 +64,9 @@ def analyze():
         cv2.imshow("Threshold Frame", thresh_frame)
         cv2.imshow("Color Frame", cur_frame)
         wait_key = cv2.waitKey(1)
+
+        ret, cur_frame_bytes = cv2.imencode('.jpg', cur_frame)
+        cur_frame_bytes = base64.b64encode(cur_frame_bytes).decode("utf-8")
 
         if var_motion != prev_var_motion:
             print(f"Change in motion status! Prev: {prev_var_motion} | Current: {var_motion} | Pass #: {pass_idx}")
@@ -108,11 +113,19 @@ def start_analyze():
     threading.Thread(target=analyze).start()
     return flask.jsonify({"stop_program": stop_program, "status": "starting"})
 
+
+@app.route("/image")
+def show_image():
+    global cur_frame_bytes
+    return str(cur_frame_bytes)
+
+
 @app.route("/renew")
 def renewState():
     global renewInitialState
     renewInitialState = True
     return flask.jsonify({"status": "renew state"})
+
 
 if __name__ == '__main__':
     print("Starting Detection")

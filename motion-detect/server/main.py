@@ -22,10 +22,11 @@ stop_program = False
 ml_active = False
 
 prev_var_motion = None
+SENSITIVITY = 5000
 
 
 def analyze():
-    global initialState, pass_idx, var_motion, stop_program, initialState, dataFrame, ml_active, prev_var_motion
+    global initialState, pass_idx, var_motion, stop_program, initialState, dataFrame, ml_active, prev_var_motion, SENSITIVITY
     print("Starting detection")
     ml_active = True
     initialState = None
@@ -49,7 +50,7 @@ def analyze():
         thresh_frame = cv2.dilate(thresh_frame, None, iterations=2)
         cont, _ = cv2.findContours(thresh_frame.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for cur in cont:
-            if cv2.contourArea(cur) < 4000:
+            if cv2.contourArea(cur) < SENSITIVITY:
                 continue
 
             var_motion = 1

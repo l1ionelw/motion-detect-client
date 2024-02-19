@@ -128,6 +128,4 @@ def renewState():
 
 
 if __name__ == '__main__':
-    print("Starting Detection")
-    threading.Thread(target=analyze).start()
     app.run(host="98.42.152.32", port=2500)

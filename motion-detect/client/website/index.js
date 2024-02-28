@@ -1,4 +1,4 @@
-API_URL = "http://98.42.152.32:2500"
+API_URL = "https://mdetect.symhost.app"
 var statbox = document.getElementById("status-box")
 var image = document.getElementById("status-image")
 

@@ -4,7 +4,7 @@ import flask
 import pandas as panda
 import cv2
 import time
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 import logging
 import base64
@@ -126,6 +126,9 @@ def renewState():
     renewInitialState = True
     return flask.jsonify({"status": "renew state"})
 
+@app.route("/view")
+def viewer():
+    return render_template("../client/website/index.html")
 
 if __name__ == '__main__':
     app.run(host="98.42.152.32", port=2500)

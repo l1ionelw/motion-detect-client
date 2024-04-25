@@ -1,3 +1,4 @@
+import sys
 import threading
 
 import flask
@@ -25,6 +26,7 @@ prev_var_motion = None
 SENSITIVITY = 4000
 renewInitialState = False
 cur_frame_bytes = None
+show_window = sys.argv[2].casefold == "true"
 
 
 def analyze():
@@ -59,10 +61,11 @@ def analyze():
             (cur_x, cur_y, cur_w, cur_h) = cv2.boundingRect(cur)
             cv2.rectangle(cur_frame, (cur_x, cur_y), (cur_x + cur_w, cur_y + cur_h), (0, 255, 0), 3)
 
-        cv2.imshow("Gray Frame", gray_frame)
-        cv2.imshow("Diff Frame", differ_frame)
-        cv2.imshow("Threshold Frame", thresh_frame)
-        cv2.imshow("Color Frame", cur_frame)
+        if show_window: 
+            cv2.imshow("Gray Frame", gray_frame)
+            cv2.imshow("Diff Frame", differ_frame)
+            cv2.imshow("Threshold Frame", thresh_frame)
+            cv2.imshow("Color Frame", cur_frame)
         wait_key = cv2.waitKey(1)
 
         ret, cur_frame_bytes = cv2.imencode('.jpg', cur_frame)
@@ -131,4 +134,5 @@ def viewer():
     return render_template("../client/website/index.html")
 
 if __name__ == '__main__':
-    app.run(host="98.42.152.32", port=2500)
+    print(sys.argv)
+    app.run(host=sys.argv[1], port=2500)
